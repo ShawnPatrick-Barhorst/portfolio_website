@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='/styles/front.css')}}">
+    </head>
+
+    <body>
+
+        <div class="blog-header">
+            <a href="/home"> <h1> Shawn-Patrick Barhorst</h1> </a>
+            <div class="nav-link">
+                <a href="https://github.com/ShawnPatrick-Barhorst"> <h1>Github</h1> </a>
+                <a href="https://www.linkedin.com/in/shawn-patrick-barhorst/"> <h1> LinkedIn </h1> </a>
+                <a href="/about"> <h1> About </h1> </a>
+            </div>
+        </div>
+
+
+        {% for post in posts %}
+
+        <div class="blog-card">
+            <a href={{post.link}} class="blog-card">
+                <div class="blog-card-image">
+                    <img src="{{ url_for('static', filename=post.thumbnail)}}" alt="Thumbnail">
+                </div>
+                <div class="blog-card-content">
+                    <h2> {{ post.title }} </h2>
+                    <p> {{post.description}} </p>
+                </div>
+            </a>
+        </div>
+
+        {% endfor %}
+
+        <script src="" async defer></script>
+    </body>
+</html>

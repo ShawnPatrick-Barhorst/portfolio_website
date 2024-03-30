@@ -1,0 +1,9 @@
+body {
+    margin: 40px auto;
+    max-width: 650px;
+    line-height: 1.6;
+    padding: 10px;
+    font-size: 18px;
+    color: #444;
+    font-family: 'Courier New', Courier, monospace;
+}
