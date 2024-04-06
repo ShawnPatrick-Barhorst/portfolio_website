@@ -1,3 +1,7 @@
+www.shawnpatrick-barhorst.com {
+	redir https://shawnpatrick-barhorst.com{uri}
+}
+
 shawnpatrick-barhorst.com {
         reverse_proxy localhost:8000
 }
