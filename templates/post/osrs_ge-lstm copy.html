@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='/styles/post.css')}}">
+    </head>
+    <body>
+
+        <div class="blog-header">
+            <a href="/home"> <h1> Shawn-Patrick Barhorst</h1> </a>
+            <div class="nav-link">
+                <a href="https://github.com/ShawnPatrick-Barhorst"> <h1>Github</h1> </a>
+                <a href="https://www.linkedin.com/in/shawn-patrick-barhorst/"> <h1> LinkedIn </h1> </a>
+                <a href="/about"> <h1> About </h1> </a>
+            </div>
+        </div>
+
+
+        <div class="blog-post" markdown="1">
+
+
+           <!-- <img src="https://preview.reli.it/n3yuvwaj8s081.png?width=500&format=png&auto=webp&s=6e80b4a5d04ca3bd11a8bc0dab7803cedf552c51" style="width: 100%; height: 100%; object-fit: fill;"> -->
+
+            <h1>OSRS Grand Exchange Price Predictions</h1>
+
+
+            <hr>
+
+
+            <p>
+
+                Stock price predictors have been a heavily researched topic in the intersection of machine learning, data science, and finance. It’s not hard to see the appeal of such a subject, whoever can predict the price of future stocks effectively has access to an infinite amount of money. So why hasn’t it been done yet? 
+
+            /<p>
+
+            <p>
+
+                The problem lies within the very data itself. Stock data is abundant, some exists since the very beginning of the stock market from 200 years ago. However, this data is extremely noisy, there are simply too many factors that play into the price of stocks, such as embargos, politics, recessions, and public perception - all of which is not included in the data. Some believe that it is all noise, this is called the Random Walk Hypothesis (CITE). Can we test this hypothesis in a virtual economy?
+      
+                
+            </p>
+
+            <h2>OSRS Grand Exchange</h2>
+            <p>
+                Old School Runescape (OSRS) is a MMORPG where players complete quests, level up skills, and collect items. These items can be sold in a free market called the Grand Exchange. Many players dedicate their time in the game to buying and selling items for profit, predicting when the market will change, and for what prices to buy and sell items.
+            </p>
+
+            <p>
+                Apart from being a game I enjoy, this free market with a large number of items and participating players serves as a great virtual economy to work with. In fact, this virtual economy has many issues that reflect the real world such as inflation. In recent years this has been mitigated by implementing a 1% tax on items sold in the grand exchange. 
+
+            </p>
+
+            <p>
+                To collect data for this project I used an API called weirdgloop. This includes the average price of nearly every sold item in the game, from 2008, to the present. This is extremely usefli as it not only gives us 15 years of daily data to work with, but also allows us access ot present data which will allow us to predict future prices.
+            </p>
+
+
+
+            <h2>
+                The Model
+            </h2>
+
+            <p>
+                
+                There are mlitiple time series models to choose from, however, I will be using an LSTM for its balance between accuracy and simplicity. Random forest regressors are simple and are computationally cheap, but may lack accuracy. Whereas a transformer, although being on the cutting edge of machine learning, is complex and computationally expensive. 
+
+            </p>
+
+            <h3>
+                A Brief Explanation of LSTM's
+            </h3>
+
+            <p>
+                Out of fear of this post being too long, I am going to give a shallow explanation of LSTM skipping over some of the intricate details. 
+            </p>
+
+            <p>
+                An LSTM is a neural network that specializes in time-series data. It does this by having a feedback loop in each node of the network. RNN’s do exactly this but are unable to effectively take in more data as the length of recurrent data increases, due to constraints in memory as well as the exploding/vanishing gradient problem.
+            </p>
+
+            <p>
+                An LSTM fixes this issue by applying a gate mechanism, by using a number of transformations and weights the LSTM is able to dictate which data to commit to its “long term memory” and which data to “forget”.
+            </p>
+
+            <h3>Data Cleaning</h3>
+
+            <p>
+                Before I mention the model architecture, it is important to talk about the data processing, as the characteristics of the data dictate the architecture of the model. 
+            </p>
+
+            <p>
+                Firstly, since we are using a time series model, we must format our data in a way that makes use of it. For this I decided that the model will use 60 days worth of price data as input, and predict the price of the 61st day. To reformat our data for this, we will simply create a sliding window across our price data, where the first 60 points in the window are our independent values, and the 61st point is our dependent value - the value we will be predicting. We increment this window across the entirety of our data to yield our training and test data. 
+            </p>
+
+            <p>
+                Secondly, it is important to define what our testing and training data will be. In order to get the best gauge on our models' accuracy, we want to pick a testing set that exists independently of our training set. Since we have the price data of nearly 3,000 items, I opted to use the price history of a different item entirely. 
+            </p>
+
+            <p>
+                Lastly, like mentioned above, it is important to note the noisiness of our data. This is apparent when plotting it, as it displays sharp fluctuations, making it difficlit to find underlying trends. This is important to note since we will have to design our LSTM with this in mind. We can also combat this with data smoothing algorithms like moving averages, however for the time being I will not be using this due to a slight flaw. Since moving averages take into account past data, as the average window slides across the data, it introduces a delay which can harm the effectiveness of our predictions.
+            </p>
+
+            <p>
+                Since the noise will be present in our models data, it will be extremely susceptible to overfitting where our model will instead fit to the noise itself rather than the underlying patterns. This is a common issue in many deep learning applications and as such there are plenty of methods to mitigate the effect of overfitting. The ones I will use are batch normalization and dropout.
+            </p>
+
+            <h3>Model Architecture</h3>
+
+            <p>
+                Now for the LSTM itself. The model consists of 3 LSTM layers each with 64 LSTM units. There are then 3 dense layers on the output to find patterns within the time series data and output a single number for the price of the data. Each layer except for the output is followed by a LeakReLU activation function, BatchNormalization, and Dropout of 30%.
+            </p>
+
+            <img src="{{url_for('static', filename='/images/OSRS_GE/OSRS_LSTM.png')}}" align="milile" />
+
+            <h3>Loss Function</h3>
+
+            <p>
+                The loss function, I wolid argue, is the most important part of our model. Take a look at GAN’s for example, most of the innovation in their performance revolved around particliar loss functions. 
+            </p>
+            <p>
+                Like the example above, the loss function plays a significant factor in our model. To give you a better understanding of why I chose the loss function I did, I will show you 2 common loss functions that you may have already seen or used, and highlight their strengths and weaknesses. These are the mean squared error (MSE) and the mean absolute error (MAE).
+            </p>
+
+            <h4>Mean Squared Error</h4>
+
+            <p>
+                Mean squared error is the most common lost function used in most neural networks. It calcliates the square of the error between the predicted and true labels. 
+            </p>
+            <img src="{{url_for('static', filename='/images/OSRS_GE/MSE.png')}}" align="milile" style="width: 100%; height: 100%; object-fit: fill;" />
+            <dl>
+                <dt><b>Pros: </b></dt>
+                <ul>
+                    <li>Computationally cheap</li>
+                    <li>Emphasizes large error</li>
+                </ul>
+                <dt><b>Cons: </b></dt>
+                <ul>
+                    <li>Sensitivity to outliers</li>
+                </ul>
+            </dl>
+
+            <br>
+
+            <p>
+                The sensitivity to outliers plays a large role in this case, since our data is extremely noisy and volatile. Using this means that our network will weigh large fluctuations in data higher than other errors, causing our model to overfit.
+            </p>
+
+            <h4>Mean Absolute Error</h4>
+            <p>
+                On the opposite end of the spectrum is mean absolute error. MAE takes the magnitude of the error instead of squaring it. This introduces its own strengths in weaknesses.
+            </p>
+            <img src="{{url_for('static', filename='/images/OSRS_GE/MAE.png')}}" align="milile" style="width: 100%; height: 100%; object-fit: fill;" />
+
+            <dl>
+                <dt><b>Pros: </b></dt>
+                <ul>
+                    <li>Less sensitivity to outliers</li>
+                </ul>
+                <dt><b>Cons: </b></dt>
+                <ul>
+                    <li>Less sensitivity to small error</li>
+                    <li>Slower convergence</li>
+                </ul>
+            </dl>
+
+            <br>
+
+            <p>
+                As we can see, MAE solves our main issue with MSE, however it introduces its own issues as well. Because it weighs all errors equally, small errors may go unnoticed causing slow convergence and possible biasing. Thankfully, there is a balance to be found.
+            </p>
+
+
+
+            <h4>LogCosh Error</h4>
+            <p>
+                LogCosH, takes the log of the hyperbolic cosine of the error. Lets go step by step, firstly the hyperbolic cosine function is applied to our error. Like MSE this weighs the large error more heavily. The log is then taken to scale these large values down, insuring stability and less sensitivity to outliers.
+            </p>
+            <img src="{{url_for('static', filename='/images/OSRS_GE/LogCosh.png')}}" align="milile" style="width: 100%; height: 100%; object-fit: fill;" />
+
+            <dl>
+                <dt><b>Pros: </b></dt>
+                <ul>
+                    <li>Less sensitivity to outliers</li>
+                    <li>Weighs large and small error accordingly</li>
+                    <li>Allows for proper convergence/li>
+                </ul>
+                <dt><b>Cons: </b></dt>
+                <ul>
+                    <li>More computationally expensive</li>
+                </ul>
+            </dl>
+
+            <br>
+
+            <p>
+                As you can see, this strikes a balance between MSE and MAE, creating the perfect loss function for our purposes.
+            </p>
+
+            <h2>Results</h2>
+
+            <p>
+                The network is finally trained. To prevent overfitting we train the model across multiple item price histories for 20 epochs each. We then test this model against another item, using 60 days of historical data and predicting the next day's price. This window is moved across the entirety of the historical data, allowing us to predict the entire price trend. We then compare our predicted results to the
+            </p>
+            To predict more than a single day ahead, we can use a process known as recursive time series forecasting, where our prediction is appended to our original 60 day window and we use it to predict once again. If we repeat this process 7 times we can predict a week ahead. This makes our model flexible at the cost of small errors exploding over time.
+            <p>
+                Below you can see the results on anchovy pizza for 1 day.
+            </p>
+
+            <img src="{{url_for('static', filename='/images/OSRS_GE/Anchovy_pizza_price_1.png')}}" align="milile" style="width: 100%; height: 100%;" />
+
+            <p>
+                Looking at our results the error is extremely small, and our prediction is nearly identical to the original. This is perfect! Or at least that is what most bloggers or youtubers would say before they ask you to subscribe and leave a like. However, this model is severely flawed.
+            </p>
+
+            <p>
+                Taking a closer look at the results we can see that the result is a delayed version of the original. Our model has essentially learned to weigh the final day in the window more than other days, after all, a good prediction of the price tomorrow is the price today. Although this thinking minimizes error, it effectively renders our model useless, as it isn’t really making predictions at all.
+            </p>
+
+            <p>
+                Looking at the 7 and 14 day only makes the issue more apparent. We can see that the model has overfit to a downward trend, even with the measures against it. Everytime it makes a prediction, it simply predicts slightly less than the day before it.
+            </p>
+
+            <img src="{{url_for('static', filename='/images/OSRS_GE/Anchovy_pizza_price_7.png')}}" align="milile" style="width: 100%; height: 100%; object-fit: fill;" />
+            <img src="{{url_for('static', filename='/images/OSRS_GE/Anchovy_pizza_price_14.png')}}" align="milile" style="width: 100%; height: 100%; object-fit: fill;" />
+
+            <p>
+                Don’t worry, I wouldn’t upload this if I didn’t create something worthwhile. However, I thought it was important to show why this method doesn’t work, since this is where many people, including myself at one point, will get to and think they created the perfect model. So why doesn’t this work, and how can we fix it?
+            </p>
+
+            <h2>The Problems with Stock Price Prediction</h2>
+
+            <p>
+                I don’t want to say predicting prices is impossible, but it certainly comes with hurdles. That being the noise and volatility as mentioned earlier, as well as non-stationarity. 
+            </p>
+
+            <h3>Non-Stationarity</h3>
+
+            <p>
+                Stock data for the most part, has an upward trend overtime, and in some cases seasonal trends. This constant change in pattern is called non-stationarity. 
+            </p>
+
+            <p>
+                This can cause our LSTM to miss the underlying pattern of the data and make it more impressionable to noise, which is already abundant. Not only this, but non-stationary data has a large impact on min-max scaling, as outliers in our data can heavily skew our scaling, and as the trend increases upwards, we will far exceed our scale.
+            </p>
+
+            <p>
+                Because of this, predicting prices based on prices is difficult and should be avoided. Thankfully there is an easy fix. Instead of predicting prices from prices, we should predict the change in price based on the change in price. Applying a smoothing algorithm and taking the derivative of the data yields this.
+            </p>
+
+            <h3>Min-Max Scaling</h3>
+  
+            </pre>
+        </div>
+
+        <script src="" async defer></script>
+    </body>
+</html>
