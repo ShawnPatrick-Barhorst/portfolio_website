@@ -7,7 +7,7 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{ url_for('static', filename='/styles/front.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='/styles/about.css')}}">
     </head>
 
     <body>
@@ -21,8 +21,41 @@
             </div>
         </div>
 
-        <p></p>
+        <div class="blog-card">
+                <div class="blog-card-image">
+                    <img src={{url_for('static', filename='/images/About/headshot.jpg')}} alt="Thumbnail">
+                </div>
+                <div class="blog-card-content">
+                    <h2>CV</h2>
 
+                    <a href={{url_for('static', filename='/resume/Shawn_Patrick_Barhorst___CV.pdf')}} download="Shawn_Patrick_Barhorst__CV">
+                        <p>Download here</p>
+                    </a>
+
+
+                    <h2>Contact Information</h2>
+                    <a href="mailto:shawnpatrick.barhorst@gmail.com">
+                        <p>shawnpatrick.barhorst@gmail.com</p>
+                    </a>
+
+
+                </div>
+        </div>
+
+        <div class="blog-post" markdown="1">
+
+            <hr>
+
+            <p>I am an undergraduate electrical engineer at the University of Tennessee - Knoxville with a heavy focus on machine learning, research, and education. </p>
+
+            <p>Over the past 3 years I have led UTK’s Machine Learning Student Organization, where I create workshops to educate students on models, techniques and popular libraries, create competitions, and host guest speakers. I further cultivate my interest in teaching by contributing to the NSF’s ASTEP program, where as a TA, I teach highschoolers about concepts in electrical engineering and semiconductor technology.</p>
+
+            <p>In addition to my teaching and leadership roles, I am actively engaged in machine learning research at UTK. I have previously worked in the Emrich lab, where I used Large Language Models to classify the origin of proteins, whether from the surface or subsurface of the ocean, as well as using unsupervised graph network clustering to classify heme proteins. I currently work in MOSIS lab where my primary focus is evaluating the security and fairness of Large Language Models.</p>
+
+            <p>Working with others has been critical in refining my skills as an engineer. As an officer in IEEE’s UTK chapter, I help manage the chapter's website. As a member of IEEE-Robotics (VOLTS) I collaborate with others to build a robot for the annual IEEE SoutheastCon competition. My primary role on this robot is to develop the vision system using techniques such as edge detection, color masking, and deep learning architectures such as CNN’s, HAAR cascades and YOLO. In IEEE I have also led a competitive programming team of 3 in IEEEExtreme18. </p>
+
+        </div>
         <script src="" async defer></script>
+
     </body>
 </html>
