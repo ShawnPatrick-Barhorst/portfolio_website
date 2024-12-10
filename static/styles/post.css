@@ -28,6 +28,8 @@
 .blog-header {
     display: block;
     background-color: #eaeaea;
+    max-width: 100%;
+    min-width: 300px;
     border-radius: 0 0 0 0;
     overflow: hidden;
     margin-bottom: 50px;
@@ -37,8 +39,11 @@
 }
 
 .blog-header h1 {
+    font-size: 1vw;
     display: inline-block;
     vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
     font-size: 18px;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 
@@ -54,17 +59,6 @@
     outline: none;
     text-decoration: none;
 
-}
-
-.blog-body {
-    display: block;
-    background-color: #eaeaea;
-    border-radius: 0 0 0 0;
-    overflow: hidden;
-    margin-bottom: 50px;
-    width: 650px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .nav-link{
@@ -96,4 +90,103 @@
 
 .nav-link a:hover{
     background-color: #747474;
+}
+
+
+@media (max-width: 650px) {
+.blog-header h1 {
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 1rem;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+    margin-left: 10px;
+    margin-bottom: 0px;
+    padding-bottom: 3px;
+    margin-top: 3px;
+
+}
+
+.blog-header a {
+    display: inline-block;
+    color: inherit;
+    outline: none;
+    text-decoration: none;
+
+}
+
+.nav-link{
+    display: flex;
+    vertical-align: middle;
+    float: right;
+    margin-right: 3px;
+    margin-left: 10px;
+    height: 10%;
+    padding-bottom: 0px;
+}
+
+.nav-link h1{
+    font-size: 0.6rem;
+    padding-bottom: 0px;
+    margin: 0;
+
+}
+
+
+.nav-link a{
+    height: 100%;
+    display: inline-block;
+    color: inherit;
+    outline: none;
+    text-decoration: none;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 3px;
+    
+}
+
+.nav-link a:hover{
+    background-color: #747474;
+}
+
+
+
+.blog-post {
+    margin: 10px auto;
+    max-width: 650px;
+    line-height: 1.6;
+    padding: 10px;
+    font-size: 18px;
+    color: #444;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 0;
+}
+
+.blog-post p {
+    font-size: 0.8rem;
+    line-height: 2rem;
+    text-align: justify;
+}
+
+.blog-post img{
+    display: block;
+    margin-left:auto;
+    margin-right:auto;
+    width:50%;
+}
+
+h3 {
+    font-size: 1.2rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+}
+
+h1{
+    font-size: 1.8rem;
+}
+
 }
